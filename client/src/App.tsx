@@ -1,10 +1,12 @@
 import './App.css'
-import KanbanBorad from './components/Kanban'
+import KanbanBoard from './components/Kanban'
+import KanbanBoardProvider from './context/appContext'
+
 function App() {
   return (
-    <div>
-      <KanbanBorad />
-    </div>
+    <KanbanBoardProvider>
+      <KanbanBoard />
+    </KanbanBoardProvider>
   )
 }
 
