@@ -3,44 +3,22 @@ import { ColumnType, Tasktype } from "../types";
 import { generateUniqueId } from "../utils";
 import { DndContext } from "@dnd-kit/core";
 import Card from "./Card";
+import { useKanbanBoard } from "../context/appContext";
 import { SortableContext } from "@dnd-kit/sortable";
 
-const KanbanBorad = () => {
-    const [columns, setColumns] = useState<ColumnType[]>([]);
-    const [isFormOpen, setIsFormOpen] = useState(false)
-    const [inputValue, setInputValue] = useState('');
-    const [allTasks, setAllTasks] = useState<Tasktype[]>([])
-    const [taskInput, setTaskInput] = useState('')
+const KanbanBoard = () => {
+    const { allTasks, taskInput, setTaskInput, columns, columnName, setColumnName, isColumnFormOpen, setIsColumnFormOpen, createTask, addColumn } = useKanbanBoard()
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(event.target.value);
+        setColumnName(event.target.value);
     };
     const columnIds: any = useMemo(() => {
         columns?.map((col) => col.id);
     }, []);
     const showForm = () => {
-
-        setIsFormOpen(true)
-
+        setIsColumnFormOpen(true)
     };
-    const addColumn = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const column = {
-            id: generateUniqueId(),
-            title: inputValue,
-        };
-        setColumns([...columns, column]);
-        setInputValue('')
-        setIsFormOpen(false)
-    }
-    const createTask = (columnId: string | number) => {
-        const newTask = {
-            id: generateUniqueId(),
-            task: taskInput,
-            columnId
-        }
-        setAllTasks([...allTasks, newTask])
-    }
+
     console.log(allTasks)
     return (
         <div className="flex">
@@ -55,8 +33,8 @@ const KanbanBorad = () => {
                     )}
                 </div>
             </DndContext>
-            {isFormOpen && <form onSubmit={addColumn}>
-                <input type="text" onChange={handleChange} value={inputValue} />
+            {isColumnFormOpen && <form onSubmit={addColumn}>
+                <input type="text" onChange={handleChange} value={columnName} />
                 <button>Add</button>
             </form>}
             <button onClick={showForm}>Add column</button>
@@ -64,4 +42,4 @@ const KanbanBorad = () => {
     );
 };
 
-export default KanbanBorad;
+export default KanbanBoard;
