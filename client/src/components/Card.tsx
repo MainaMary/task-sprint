@@ -14,7 +14,9 @@ interface Props {
 const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [taskForm, setTaskForm] = useState(false)
-    const { handleTaskDelete, handleColumnDelete, clearColumn } = useKanbanBoard()
+    const [isEditing, setIsEditing] = useState(false)
+    const [newColumnName, setColumnName] = useState('')
+    const { handleTaskDelete, handleColumnDelete, clearColumn, addColumn, handleEditColumn } = useKanbanBoard()
     const handleOpen = () => {
         setIsOpen((prev) => !prev);
     };
@@ -24,19 +26,42 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTaskInput(event.target.value);
     };
-    const handleColumnEdit = () => {
+    const openEdit = () => {
+        setIsEditing(prev => !prev)
+
+
 
     }
+    const handleColumnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setColumnName(event.target.value)
+
+    }
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         addTask(item.id)
         setTaskForm(false)
         setTaskInput('')
     }
+    const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        let newColumn = {
+            id: item.id,
+            title: newColumnName
+        }
+        handleEditColumn(newColumn)
+        setIsEditing(false)
+        setIsOpen(false)
+
+    }
     return (
         <div>
             <p>{item.id}</p>
             <div className="flex justify-between h-auto items-center">
+                {isEditing && <form onSubmit={handleFormSubmit}>
+                    <input type="text" onChange={handleColumnChange} value={newColumnName} />
+                    <button>Edit</button>
+                </form>}
                 <p> {item.title} </p>
                 <BsThreeDotsVertical onClick={handleOpen} />
             </div>
@@ -44,7 +69,7 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
                 {isOpen && (
                     <ul>
                         <li onClick={() => clearColumn(item.id)}>Clear</li>
-                        <li>Update</li>
+                        <li onClick={openEdit}>Update</li>
                         <li onClick={() => handleColumnDelete(item.id)}>Delete</li>
                     </ul>
                 )}
