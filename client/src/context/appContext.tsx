@@ -4,7 +4,6 @@ import { generateUniqueId } from "../utils";
 interface Props {
     children: ReactNode
 }
-
 interface initialStateType {
     allTasks: Tasktype[],
     setAllTasks: React.Dispatch<React.SetStateAction<Tasktype[]>>,
@@ -21,7 +20,12 @@ interface initialStateType {
     clearColumn: (x: string | number) => void,
     addColumn: (event: React.FormEvent<HTMLFormElement>) => void,
     createTask: (columnId: string | number) => void,
-    editColumn: (column: ColumnType) => void,
+    editColumn: {
+        id: string | number,
+        title: string
+    },
+    setEditColumn: React.Dispatch<React.SetStateAction<ColumnType>>,
+    handleEditColumn: (column: ColumnType) => void
 }
 const TaskManagerContext = createContext<initialStateType>({
     allTasks: [],
@@ -39,10 +43,19 @@ const TaskManagerContext = createContext<initialStateType>({
     clearColumn: () => { },
     addColumn: () => { },
     createTask: () => { },
-    editColumn: () => { }
+    editColumn: {
+        id: '',
+        title: ''
+    },
+    setEditColumn: () => { },
+    handleEditColumn: () => { }
 });
 export const useKanbanBoard = () => {
-    return useContext(TaskManagerContext)
+    const context = useContext(TaskManagerContext)
+    if (!context) {
+        throw new Error("useKanbanBoard must be used within a KanbanBoardProvider");
+    }
+    return context;
 }
 
 const KanbanBoardProvider = ({ children }: Props) => {
@@ -56,6 +69,7 @@ const KanbanBoardProvider = ({ children }: Props) => {
     const [taskInput, setTaskInput] = useState('')
     const [columnName, setColumnName] = useState('')
     const [isColumnFormOpen, setIsColumnFormOpen] = useState(false)
+    const [editColumn, setEditColumn] = useState<ColumnType>(initialColumnState)
 
     useEffect(() => {
         localStorage.setItem('tasks', JSON.stringify(allTasks))
@@ -70,6 +84,8 @@ const KanbanBoardProvider = ({ children }: Props) => {
         };
         setColumns([...columns, column]);
         setColumnName('')
+
+
         setIsColumnFormOpen(false)
     }
     const createTask = (columnId: string | number) => {
@@ -94,11 +110,11 @@ const KanbanBoardProvider = ({ children }: Props) => {
         const clearTasks = allTasks.filter(task => task.columnId !== columnId)
         setAllTasks(clearTasks)
     }
-    const editColumn = (formValue: ColumnType) => {
+    const handleEditColumn = (formValue: ColumnType) => {
         const { id, title } = formValue
         const updatedColumns = columns.map(column => column.id === id ? { id, title } : column)
         setColumns(updatedColumns)
     }
-    return <TaskManagerContext.Provider value={{ allTasks, setAllTasks, taskInput, setTaskInput, columnName, setColumnName, columns, setColumns, handleColumnDelete, handleTaskDelete, clearColumn, isColumnFormOpen, setIsColumnFormOpen, addColumn, createTask, editColumn }}>{children}</TaskManagerContext.Provider>
+    return <TaskManagerContext.Provider value={{ allTasks, setAllTasks, taskInput, setTaskInput, columnName, setColumnName, columns, setColumns, handleColumnDelete, handleTaskDelete, clearColumn, isColumnFormOpen, setIsColumnFormOpen, addColumn, createTask, editColumn, setEditColumn, handleEditColumn }}>{children}</TaskManagerContext.Provider>
 }
 export default KanbanBoardProvider
