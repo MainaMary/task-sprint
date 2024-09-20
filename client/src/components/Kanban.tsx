@@ -1,13 +1,11 @@
-import { useState, useMemo } from "react";
-import { ColumnType, Tasktype } from "../types";
-import { generateUniqueId } from "../utils";
+import { useMemo } from "react";
 import { DndContext } from "@dnd-kit/core";
 import Card from "./Card";
 import { useKanbanBoard } from "../context/appContext";
 import { SortableContext } from "@dnd-kit/sortable";
 
 const KanbanBoard = () => {
-    const { allTasks, taskInput, setTaskInput, columns, columnName, setColumnName, isColumnFormOpen, setIsColumnFormOpen, createTask, addColumn } = useKanbanBoard()
+    const { allTasks, taskInput, setTaskInput, columns, columnName, setColumnName, isColumnFormOpen, setIsColumnFormOpen, createTask, addColumn, } = useKanbanBoard()
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setColumnName(event.target.value);
