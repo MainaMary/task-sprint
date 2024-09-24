@@ -84,6 +84,7 @@ const KanbanBoardProvider = ({ children }: Props) => {
         };
         setColumns([...columns, column]);
         setColumnName('')
+        setIsColumnFormOpen(false)
 
 
         setIsColumnFormOpen(false)
