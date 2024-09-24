@@ -3,6 +3,9 @@ import { DndContext } from "@dnd-kit/core";
 import Card from "./Card";
 import { useKanbanBoard } from "../context/appContext";
 import { SortableContext } from "@dnd-kit/sortable";
+import { Paper, Typography, Box, Grid, Button } from "@mui/material";
+import TextFieldInput from "./TextFieldInput";
+//import Unstable_Grid2 from '@mui/material/Unstable_Grid2';
 
 const KanbanBoard = () => {
     const { allTasks, taskInput, setTaskInput, columns, columnName, setColumnName, isColumnFormOpen, setIsColumnFormOpen, createTask, addColumn, } = useKanbanBoard()
@@ -14,29 +17,38 @@ const KanbanBoard = () => {
         columns?.map((col) => col.id);
     }, []);
     const showForm = () => {
-        setIsColumnFormOpen(true)
+        setIsColumnFormOpen(prev => !prev)
     };
-
-    console.log(allTasks)
     return (
-        <div className="flex">
+        <Box style={{ display: "flex", gap: 12 }}>
             <DndContext>
-                <div className="flex gap-4">
+                <Grid container spacing={3} style={{ width: "100%" }}>
                     {columns?.length > 0 && (
                         columns?.map((item) => (
-                            <Card key={item.id} item={item} addTask={createTask} taskInput={taskInput} setTaskInput={setTaskInput}
-                                tasks={allTasks.filter(task => task.columnId === item.id)}
-                            />
+                            <Grid item style={{ width: "250px" }}>
+                                <Card key={item.id} item={item} addTask={createTask} taskInput={taskInput} setTaskInput={setTaskInput}
+                                    tasks={allTasks.filter(task => task.columnId === item.id)}
+                                />
+                            </Grid>
                         ))
                     )}
-                </div>
+                </Grid>
             </DndContext>
-            {isColumnFormOpen && <form onSubmit={addColumn}>
-                <input type="text" onChange={handleChange} value={columnName} />
-                <button>Add</button>
-            </form>}
-            <button onClick={showForm}>Add column</button>
-        </div>
+            {isColumnFormOpen &&
+                <Paper elevation={2} style={{ height: "120px", padding: "8px" }} >
+                    <form onSubmit={addColumn}>
+                        <TextFieldInput label="Name" onChange={handleChange} value={columnName} />
+                        <Box style={{ display: "flex", justifyContent: "space-between" }}>
+                            <Typography onClick={showForm}>Cancel</Typography>
+                            <button>Add</button>
+                        </Box>
+                    </form>
+                </Paper>
+            }
+            {!isColumnFormOpen && columns?.length <= 4 && <Paper style={{ height: "40px" }} elevation={2}>
+                <Button style={{ width: "250px" }} onClick={showForm}>Add column</Button></Paper>}
+
+        </Box>
     );
 };
 

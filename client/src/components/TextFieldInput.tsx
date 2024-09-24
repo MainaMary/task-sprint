@@ -14,7 +14,7 @@ const TextFieldInput = ({ onChange, label, value }: TextFieldProps) => {
             onChange={onChange}
             focused
             required
-            style={{ padding: "4px" }}
+            style={{ padding: "8px" }}
         />
     )
 }
