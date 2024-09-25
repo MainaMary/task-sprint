@@ -1,12 +1,12 @@
-import { useState } from "react";;
+import { useMemo, useState } from "react";;
 import { ColumnType, Tasktype } from "../types";
 import { useKanbanBoard } from "../context/appContext";
-import { MdDelete } from "react-icons/md";
 import { Paper, Typography, Box } from "@mui/material";
 import TextFieldInput from "./TextFieldInput";
 import { IoIosClose } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
-import { useSortable } from "@dnd-kit/sortable";
+import { useSortable, SortableContext } from "@dnd-kit/sortable";
+import Task from "./Task";
 
 interface Props {
     item: ColumnType;
@@ -21,7 +21,6 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
     const [isEditing, setIsEditing] = useState(false);
     const [newColumnName, setColumnName] = useState("");
     const {
-        handleTaskDelete,
         handleColumnDelete,
         clearColumn,
         handleEditColumn,
@@ -29,16 +28,20 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
 
     const { transition, setNodeRef, attributes, transform, listeners } = useSortable({
         id: item.id,
-        // data: {
-        //     type: "Column",
-        //     item
-        // }
+        data: {
+            type: "Column",
+            item
+        }
     })
 
     const style = {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
         transition,
     }
+
+    const taskIds = useMemo(() => {
+        return tasks?.map(task => task.id)
+    }, [tasks])
     const handleOpen = () => {
         setIsOpen((prev) => !prev);
     };
@@ -72,7 +75,7 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
     };
     return (
         <Paper ref={setNodeRef} elevation={2} style={{ position: "relative", paddingBottom: "8px", ...style }} {...attributes} {...listeners}>
-            <Box style={{ display: "flex", height: "auto", alignItems: "center", width: "250px,", padding: "8px", justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", height: "auto", alignItems: "center", width: "250px,", padding: "8px", justifyContent: "space-between" }}>
                 {isEditing && (
                     <form onSubmit={handleFormSubmit}>
                         <input
@@ -80,20 +83,20 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
                             onChange={handleColumnChange}
                             value={newColumnName}
                         />
-                        <Box style={{ display: "flex", justifyContent: "space-around", marginTop: "10px", height: "auto", alignItems: "center" }}>
+                        <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px", height: "auto", alignItems: "center" }}>
                             <Typography onClick={openEdit}>Cancel</Typography>
                             <button style={{ backgroundColor: "#1A76D2" }}>Edit</button>
                         </Box>
                     </form>
                 )}
-                {!isEditing && <Box style={{ display: "flex", height: "auto", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                {!isEditing && <Box sx={{ display: "flex", height: "auto", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                     <Typography> {item.title} </Typography>
                     <div><BsThreeDots style={{ cursor: "pointer", textAlign: "left" }} onClick={handleOpen} /></div>
                 </Box>}
             </Box>
             <Box style={{ position: "absolute", top: "10px", right: "-16px" }}>
                 {isOpen && (
-                    <Paper elevation={2} style={{ padding: "12px", textAlign: "start", cursor: "pointer" }}>
+                    <Paper elevation={2} sx={{ padding: "12px", textAlign: "start", cursor: "pointer" }}>
                         <IoIosClose onClick={handleOpen} />
                         <Typography onClick={() => clearColumn(item.id)} style={{ margin: "4px" }}>Clear</Typography>
                         <Typography onClick={openEdit} style={{ margin: "4px" }}>Update</Typography>
@@ -101,23 +104,14 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
                     </Paper>
                 )}
             </Box>
-            {tasks?.length > 0 &&
-                tasks?.map((task) => (
-                    <Box
-                        key={task.id}
-                        sx={{
-                            borderTop: "1px solid gray",
-                            borderBottom: "1px solid gray",
-                            textAlign: "left",
-                            padding: "16px 8px"
-                        }}
-                    >
-                        <Paper elevation={6} style={{ padding: "6px" }}>
-                            <Typography>{task.task}</Typography>
-                            <MdDelete onClick={() => handleTaskDelete(task.id)} />
-                        </Paper>
-                    </Box>
-                ))}
+            <SortableContext items={taskIds}>
+                {tasks?.length > 0 &&
+                    tasks?.map((task) => (
+                        <Task key={task.id} task={task} />
+
+                    ))}
+            </SortableContext>
+
             {taskForm && (
                 <form onSubmit={handleSubmit}>
                     <TextFieldInput
