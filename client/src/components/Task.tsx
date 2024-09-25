@@ -2,14 +2,9 @@ import { Box, Paper, Typography } from '@mui/material'
 import { useKanbanBoard } from '../context/appContext'
 import { MdDelete } from 'react-icons/md'
 import { useSortable } from '@dnd-kit/sortable'
+import { SingleTaskType } from '../types'
 
-interface TaskType {
-    task: {
-        id: string,
-        task: string
-    }
-}
-const Task = ({ task }: TaskType) => {
+const Task = ({ task }: SingleTaskType) => {
     const { handleTaskDelete } = useKanbanBoard();
     const { transition, setNodeRef, attributes, transform, listeners } = useSortable({
         id: task.id,

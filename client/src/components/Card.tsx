@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";;
-import { ColumnType, Tasktype } from "../types";
 import { useKanbanBoard } from "../context/appContext";
 import { Paper, Typography, Box } from "@mui/material";
 import TextFieldInput from "./TextFieldInput";
@@ -7,15 +6,9 @@ import { IoIosClose } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
 import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import Task from "./Task";
+import { CardType } from "../types";
 
-interface Props {
-    item: ColumnType;
-    addTask: (id: string | number) => void;
-    taskInput: string;
-    setTaskInput: React.Dispatch<React.SetStateAction<string>>;
-    tasks: Tasktype[];
-}
-const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
+const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: CardType) => {
     const [isOpen, setIsOpen] = useState(false);
     const [taskForm, setTaskForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -38,7 +31,6 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
         transition,
     }
-
     const taskIds = useMemo(() => {
         return tasks?.map(task => task.id)
     }, [tasks])

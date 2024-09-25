@@ -28,7 +28,7 @@ interface initialStateType {
         title: string
     },
     setEditColumn: React.Dispatch<React.SetStateAction<ColumnType>>,
-    handleEditColumn: (column: ColumnType) => void
+    handleEditColumn: (column: ColumnType) => void,
 }
 const TaskManagerContext = createContext<initialStateType>({
     allTasks: [],
@@ -51,7 +51,7 @@ const TaskManagerContext = createContext<initialStateType>({
         title: ''
     },
     setEditColumn: () => { },
-    handleEditColumn: () => { }
+    handleEditColumn: () => { },
 });
 export const useKanbanBoard = () => {
     const context = useContext(TaskManagerContext)
@@ -121,6 +121,7 @@ const KanbanBoardProvider = ({ children }: Props) => {
         const updatedColumns = columns.map(column => column.id === id ? { id, title } : column)
         setColumns(updatedColumns)
     }
+
     return <TaskManagerContext.Provider value={{ allTasks, setAllTasks, taskInput, setTaskInput, columnName, setColumnName, columns, setColumns, handleColumnDelete, handleTaskDelete, clearColumn, isColumnFormOpen, setIsColumnFormOpen, addColumn, createTask, editColumn, setEditColumn, handleEditColumn }}>{children}</TaskManagerContext.Provider>
 }
 export default KanbanBoardProvider

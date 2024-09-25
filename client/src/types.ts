@@ -7,3 +7,21 @@ export interface Tasktype {
   task: string;
   columnId: string | number;
 }
+export interface SingleTaskType {
+  task: {
+    id: string;
+    task: string;
+  };
+}
+export interface TextFieldProps {
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  label: string;
+  value: string;
+}
+export interface CardType {
+  item: ColumnType;
+  addTask: (id: string | number) => void;
+  taskInput: string;
+  setTaskInput: React.Dispatch<React.SetStateAction<string>>;
+  tasks: Tasktype[];
+}

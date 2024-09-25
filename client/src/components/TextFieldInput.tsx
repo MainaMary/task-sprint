@@ -1,10 +1,5 @@
 import { TextField } from "@mui/material";
-interface TextFieldProps {
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-    label: string;
-    value: string
-
-}
+import { TextFieldProps } from "@mui/material";
 const TextFieldInput = ({ onChange, label, value }: TextFieldProps) => {
     return (
         <TextField
