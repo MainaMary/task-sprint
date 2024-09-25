@@ -2,10 +2,12 @@ import { useState } from "react";;
 import { ColumnType, Tasktype } from "../types";
 import { useKanbanBoard } from "../context/appContext";
 import { MdDelete } from "react-icons/md";
-import { Paper, Typography, Box, Grid } from "@mui/material";
+import { Paper, Typography, Box } from "@mui/material";
 import TextFieldInput from "./TextFieldInput";
 import { IoIosClose } from "react-icons/io";
 import { BsThreeDots } from "react-icons/bs";
+import { useSortable } from "@dnd-kit/sortable";
+
 interface Props {
     item: ColumnType;
     addTask: (id: string | number) => void;
@@ -24,6 +26,19 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
         clearColumn,
         handleEditColumn,
     } = useKanbanBoard();
+
+    const { transition, setNodeRef, attributes, transform, listeners } = useSortable({
+        id: item.id,
+        // data: {
+        //     type: "Column",
+        //     item
+        // }
+    })
+
+    const style = {
+        transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+        transition,
+    }
     const handleOpen = () => {
         setIsOpen((prev) => !prev);
     };
@@ -56,7 +71,7 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: Props) => {
         setIsOpen(false);
     };
     return (
-        <Paper elevation={2} style={{ position: "relative", paddingBottom: "8px" }}>
+        <Paper ref={setNodeRef} elevation={2} style={{ position: "relative", paddingBottom: "8px", ...style }} {...attributes} {...listeners}>
             <Box style={{ display: "flex", height: "auto", alignItems: "center", width: "250px,", padding: "8px", justifyContent: "space-between" }}>
                 {isEditing && (
                     <form onSubmit={handleFormSubmit}>

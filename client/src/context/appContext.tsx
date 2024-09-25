@@ -1,6 +1,9 @@
 import { ReactNode, useState, useEffect, useContext, createContext, useCallback } from "react";
 import { ColumnType, Tasktype } from "../types";
 import { generateUniqueId } from "../utils";
+
+//This file defines the KanbanContext using React's Context API to manage  global state in the Kanban application.The context provides access to tasks,  columns, and various utility functions to manipulate them, enabling components to read and update state without prop drilling.
+
 interface Props {
     children: ReactNode
 }
@@ -59,6 +62,8 @@ export const useKanbanBoard = () => {
 }
 
 const KanbanBoardProvider = ({ children }: Props) => {
+
+    //persist the columns and tasks data in local storage
     const initialTasksState = localStorage.getItem('tasks')
         ? JSON.parse(localStorage.getItem('tasks') || '')
         : []
