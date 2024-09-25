@@ -20,7 +20,7 @@ A modern web application built with React and Vite, featuring fast performance a
 - PWA support for offline capabilities
 - Modern JavaScript (ES6+) and TypeScript support
 
-## Installation
+## Installation (Client)
 
 To get started, clone the repository and install the dependencies:
 
