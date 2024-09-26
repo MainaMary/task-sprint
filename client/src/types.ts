@@ -19,9 +19,7 @@ export interface TextFieldProps {
   value: string;
 }
 export interface CardType {
-  item: ColumnType;
-  addTask: (id: string | number) => void;
-  taskInput: string;
-  setTaskInput: React.Dispatch<React.SetStateAction<string>>;
+  item?: ColumnType;
   tasks: Tasktype[];
+  activeColumn?: ColumnType | null;
 }
