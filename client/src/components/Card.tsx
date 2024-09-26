@@ -8,19 +8,20 @@ import { useSortable, SortableContext } from "@dnd-kit/sortable";
 import Task from "./Task";
 import { CardType } from "../types";
 
-const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: CardType) => {
+const Card = ({ item, tasks }: CardType) => {
     const [isOpen, setIsOpen] = useState(false);
     const [taskForm, setTaskForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [newColumnName, setColumnName] = useState("");
     const {
+        createTask, taskInput, setTaskInput,
         handleColumnDelete,
         clearColumn,
         handleEditColumn,
     } = useKanbanBoard();
 
-    const { transition, setNodeRef, attributes, transform, listeners } = useSortable({
-        id: item.id,
+    const { transition, setNodeRef, attributes, transform, listeners, isDragging } = useSortable({
+        id: item ? item.id : '',
         data: {
             type: "Column",
             item
@@ -51,22 +52,25 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: CardType) => {
     };
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        addTask(item.id);
+        createTask(item ? item.id : '');
         setTaskForm(false);
         setTaskInput("");
     };
     const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         let newColumn = {
-            id: item.id,
+            id: item ? item.id : '',
             title: newColumnName,
         };
         handleEditColumn(newColumn);
         setIsEditing(false);
         setIsOpen(false);
     };
+    if (isDragging) {
+        return <Paper elevation={2}>Drag</Paper>
+    }
     return (
-        <Paper ref={setNodeRef} elevation={2} style={{ position: "relative", paddingBottom: "8px", ...style }} {...attributes} {...listeners}>
+        <Paper ref={setNodeRef} elevation={2} sx={{ position: "relative", paddingBottom: "8px", ...style }} {...attributes} {...listeners}>
             <Box sx={{ display: "flex", height: "auto", alignItems: "center", width: "250px,", padding: "8px", justifyContent: "space-between" }}>
                 {isEditing && (
                     <form onSubmit={handleFormSubmit}>
@@ -82,17 +86,17 @@ const Card = ({ item, addTask, taskInput, setTaskInput, tasks }: CardType) => {
                     </form>
                 )}
                 {!isEditing && <Box sx={{ display: "flex", height: "auto", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-                    <Typography> {item.title} </Typography>
+                    <Typography> {item ? item.title : ''} </Typography>
                     <div><BsThreeDots style={{ cursor: "pointer", textAlign: "left" }} onClick={handleOpen} /></div>
                 </Box>}
             </Box>
-            <Box style={{ position: "absolute", top: "10px", right: "-16px" }}>
+            <Box sx={{ position: "absolute", top: "10px", right: "-16px" }}>
                 {isOpen && (
                     <Paper elevation={2} sx={{ padding: "12px", textAlign: "start", cursor: "pointer" }}>
                         <IoIosClose onClick={handleOpen} />
-                        <Typography onClick={() => clearColumn(item.id)} style={{ margin: "4px" }}>Clear</Typography>
+                        <Typography onClick={() => clearColumn(item ? item.id : '')} style={{ margin: "4px" }}>Clear</Typography>
                         <Typography onClick={openEdit} style={{ margin: "4px" }}>Update</Typography>
-                        <Typography style={{ margin: "4px" }} onClick={() => handleColumnDelete(item.id)}>Delete</Typography>
+                        <Typography style={{ margin: "4px" }} onClick={() => handleColumnDelete(item ? item.id : '')}>Delete</Typography>
                     </Paper>
                 )}
             </Box>

@@ -6,7 +6,7 @@ import { SingleTaskType } from '../types'
 
 const Task = ({ task }: SingleTaskType) => {
     const { handleTaskDelete } = useKanbanBoard();
-    const { transition, setNodeRef, attributes, transform, listeners } = useSortable({
+    const { transition, setNodeRef, attributes, transform, listeners, isDragging } = useSortable({
         id: task.id,
         data: {
             type: "Task",
@@ -16,6 +16,9 @@ const Task = ({ task }: SingleTaskType) => {
     const style = {
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
         transition,
+    }
+    if (isDragging) {
+        return <Paper elevation={6}>Drag</Paper>
     }
     return (
         <Box
