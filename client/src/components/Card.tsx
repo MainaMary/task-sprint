@@ -46,6 +46,7 @@ const Card = ({ item, tasks }: CardType) => {
     };
     const openEdit = () => {
         setIsEditing((prev) => !prev);
+        setIsOpen(false)
     };
     const handleColumnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setColumnName(event.target.value);

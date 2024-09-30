@@ -86,8 +86,8 @@ const KanbanBoard = () => {
                     </form>
                 </Paper>
             }
-            {!isColumnFormOpen && columns?.length <= 4 && <Paper style={{ height: "40px" }} elevation={2}>
-                <Button style={{ width: "250px" }} onClick={showForm}>Add column</Button></Paper>}
+            {!isColumnFormOpen && columns?.length <= 4 && <Paper style={{ height: "40px", textAlign: "start" }} elevation={2}>
+                <Button style={{ width: "250px", textAlign: "start" }} onClick={showForm}>Add column</Button></Paper>}
 
         </Box>
     );
