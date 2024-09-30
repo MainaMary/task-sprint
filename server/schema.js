@@ -10,4 +10,8 @@ type Column {
     title: String!
     tasks: [Task!]!  # An array of Task objects
 }
+type Query {
+    tasks:[Task]
+    columns:[Column]
+}
 `;

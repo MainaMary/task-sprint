@@ -24,7 +24,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  //typeDefs: description of the data types exposed on Graphs
+  //typeDefs: description of the data types exposed on the Graphs
   //resolvers: functions that handle how to respond to queries and mutations
   typeDefs,
   resolvers,
