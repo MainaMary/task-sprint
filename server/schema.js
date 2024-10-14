@@ -13,5 +13,6 @@ type Column {
 type Query {
     tasks:[Task]
     columns:[Column]
+    column(id:ID!): Column
 }
 `;
