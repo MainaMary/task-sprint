@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "../schema.js";
 import db from "../db.js";
+import { v4 as uuidv4 } from 'uuid';
 const PORT = 4000;
 
 const resolvers = {
@@ -15,19 +16,22 @@ const resolvers = {
     column (_, args){
      return db.columns.find(column => column.id === args.id)
     }
-
-
   },
-  // Mutation: {
-  //   addColumn(_, args) {
-  //     let column = {
-  //       ...args.column,
-  //       id: Math.floor(Math.random() * 1000),
-  //     };
-  //     db.columns.push(column);
-  //     return column;
-  //   },
-  // },
+  Mutation:{
+    addColumn(_,args){
+      let newColumn ={
+       ...args.column,
+       id: uuidv4()
+      }
+      db.columns.push(newColumn)
+     return newColumn
+    },
+    deleteColumn(_,args){
+      db.games = db.columns.filter(column => column.id !== args.id)
+      return db.games
+    }
+
+  }
 };
 
 const server = new ApolloServer({
