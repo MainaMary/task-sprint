@@ -15,4 +15,13 @@ type Query {
     columns:[Column]
     column(id:ID!): Column
 }
+
+input addColumn{
+title: String!
+}
+type Mutation {
+    deleteColumn(id:ID!): [Column]
+    deleteTask(id:ID!): [Task]
+    addColumn(column: addColumn!): Column
+}
 `;
