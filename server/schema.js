@@ -19,9 +19,13 @@ type Query {
 input addColumn{
 title: String!
 }
+input updateColumn{
+title:String!
+}
 type Mutation {
     deleteColumn(id:ID!): [Column]
     deleteTask(id:ID!): [Task]
     addColumn(column: addColumn!): Column
+    updateGame(id:ID!, edit: updateColumn):Column
 }
 `;
