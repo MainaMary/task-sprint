@@ -27,8 +27,8 @@ const resolvers = {
      return newColumn
     },
     deleteColumn(_,args){
-      db.games = db.columns.filter(column => column.id !== args.id)
-      return db.games
+      db.columns = db.columns.filter(column => column.id !== args.id)
+      return db.columns
     },
     updategame(_,args){
      db.columns = db.columns.map(column =>{
@@ -37,6 +37,7 @@ const resolvers = {
       }
       return column
      })
+     return db.columns.find(column =>column.id === args.id)
     }
 
   }
