@@ -29,6 +29,14 @@ const resolvers = {
     deleteColumn(_,args){
       db.games = db.columns.filter(column => column.id !== args.id)
       return db.games
+    },
+    updategame(_,args){
+     db.columns = db.columns.map(column =>{
+      if(column.id === args.id){
+        return{...column,...args.edit}
+      }
+      return column
+     })
     }
 
   }
